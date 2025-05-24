@@ -1,0 +1,611 @@
+{
+  "name": "Linkedin Follow Up Reply",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -20
+      ],
+      "id": "75b18c96-3684-45a2-81e3-0621e31dca07",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.phantombuster.com/api/v2/agents/launch",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Phantombuster-Key",
+              "value": "rTUorTzk9IsnmCIc1tNUpsXYUUOBaC2M63t0OtR7uzI"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"8372180606837374\",\n  \"argument\": {\n    \"sessionCookie\": \"AQEDAUwiXTYBwzZ7AAABlm3C8nAAAAGXCHRba00AvnzQ2N1p9_IRnZh5a3VLPlf9Q2aL0dm0Kg76nQ7U9J1uVo04NoZfA0OEq2WxNQFpRtIWn3x2RibURyCvkYImshU3HyzOMrOxhAUdmIZZsC4_s94N\",\n    \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36\",\n    \"inboxFilter\": \"all\",\n    \"before\":  \"{{ $json.today }}\",\n    \"numberOfThreadsToScrape\": 30\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        -20
+      ],
+      "id": "3a8ae6b7-73de-43b8-b635-f6c6331ea5f9",
+      "name": "Phantom Buster Fetch Message"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.phantombuster.com/api/v2/containers/fetch-output?id={{$json.containerId}}\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Phantombuster-Key",
+              "value": "rTUorTzk9IsnmCIc1tNUpsXYUUOBaC2M63t0OtR7uzI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -20
+      ],
+      "id": "b2316a0b-483d-4fe2-8dee-24e3522ac19e",
+      "name": "Phantom Download Output"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.jsonUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -20
+      ],
+      "id": "ea0762ba-e2d9-4522-aa99-727daad6705a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2068,
+        200
+      ],
+      "id": "f6fc3edc-ca96-4ce3-891b-161a8ccc2477",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Ia9LBrJi65AOqDXo",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You’re just a normal human replying casually on LinkedIn.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "1. CraftyAutomation: Company Overview CraftyAutomation appears to be a small business or startup, led by founder Noman Ishfaq, specializing in AI and automation solutions, particularly for the real estate industry. The company’s pitch and approach focus on building and deploying AI-driven systems that automate key business processes for real estate teams and solo realtors.  2. What They Offer Core Services and Solutions:  AI Voice Agent + CRM Automation:  Builds 24/7 AI voice agents to qualify leads over the phone.  Integrates with CRM systems to automatically update lead details.  Sets up automated SMS and email follow-ups.  AI Video & Research Agent Automation:  Implements video automation funnels for new leads (using HeyGen).  Creates AI research assistants to find and summarize investment properties.  Automates welcome emails and personalized responses for new inquiries.  Outcome:  Saves clients over 10 hours per week by automating calls and data entry.  Ensures every lead is followed up instantly.  Delivers 10+ videos per week without manual editing.  Provides a market edge by surfacing the best properties faster than competitors.  3. Position, Sales, and Revenue Position:  CraftyAutomation is positioned as a boutique automation provider, focusing on real estate and leveraging AI to solve specific pain points for agents and teams.  Sales and Revenue:  No public data is available regarding sales volume or revenue. The company is described as a startup with recent client engagements.  Company Size:  Based on available information, it is likely a small team or solo operation, similar to other boutique automation consultancies.  4. Pitch CraftyAutomation’s Pitch:  “We don’t just talk AI. We build & deploy systems that save time, book calls, and grow real estate businesses—on autopilot. Here’s what we’ve done: AI voice agents, CRM automation, AI video funnels, and research agents. Want to see what we can build for you? Book a quick call at the top of my profile.”  5. Testimonials Client 1 (Real Estate Team):  Saved 10+ hours/week previously spent on calls and data entry.  Ensured every lead was followed up instantly.  Client 2 (Solo Realtor):  Delivered 10+ videos/week without manual editing.  Gave a market edge by surfacing the best properties faster than competitors.  These are not formal testimonials but direct results reported by the founder for client engagements.  6. What’s Unique in Their Offer Unique Selling Points:  End-to-End Automation:  Offers a comprehensive suite of automation tools tailored for real estate, from lead qualification to follow-up and research.  AI-Powered Voice and Video Agents:  Provides 24/7 AI voice agents and video automation, which is not common among small automation providers.  Seamless CRM Integration:  Automatically updates CRM systems, reducing manual data entry.  Custom Solutions:  Builds bespoke automation workflows based on client needs, not just off-the-shelf products.  7. Distinction from Similar Companies There is a company called Crafty (craftydelivers.com) that focuses on office pantry and inventory management automation, but this is a separate entity from CraftyAutomation. Crafty (craftydelivers.com) offers:  Automated inventory management for office pantries.  Order automation based on consumption patterns.  Centralized reporting and budget tracking.  Onsite support and expert guidance for workplace food programs.  8. Summary Table Aspect\tCraftyAutomation (AI Automation)\tCrafty (Office Pantry Automation) Industry\tReal Estate, AI Automation\tOffice Pantry, Food & Beverage Offerings\tAI voice, video, CRM, research automation\tInventory, order, reporting automation Unique Features\t24/7 AI agents, CRM integration\tReorder thresholds, onsite support Testimonials\tHours saved, instant follow-up\tTime savings, improved visibility"
+            },
+            {
+              "message": "=You’re just a normal human replying casually on LinkedIn.  Here is some info about agencies you can use in the reply: {agency_info}  Message:{{ $json.message }}  From:{{ $json.FullName }}   How to reply: - Sound like a real person talking to a friend. - Be short (1–2 lines), warm, and natural. - If they ask about agencies, use the agency info. - Only say what fits the message. - Match the person's tone:   - If they say “hi”, reply like “Hey {fullname}, how’s it going?”   - If they’re curious, give simple next steps + thread link.   - If not interested, say “All good, no worries!”   - If unclear, ask a chill, friendly question.  No robotic language. No formal lines. Be real."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        1980,
+        -20
+      ],
+      "id": "10b66d13-2aee-4ea0-afa7-c5fbad978025",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2796,
+        -20
+      ],
+      "id": "e5686ce2-946b-43d8-8312-32734a396639",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $json.output;\n\n// Extract JSON URL\nconst jsonMatch = output.match(/https:\\/\\/phantombuster\\.s3\\.amazonaws\\.com\\/[^\\s]+\\/result\\.json/);\n\n// Extract CSV URL\nconst csvMatch = output.match(/https:\\/\\/phantombuster\\.s3\\.amazonaws\\.com\\/[^\\s]+\\/result\\.csv/);\n\nreturn [\n  {\n    json: {\n      jsonUrl: jsonMatch ? jsonMatch[0] : null,\n      csvUrl: csvMatch ? csvMatch[0] : null\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -20
+      ],
+      "id": "6b922c39-6f97-43b3-8946-9dd14eaba9ca",
+      "name": "Clean URL"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items\n  .map(item => {\n    const json = item.json;\n\n    // Flatten linkedInUrls array to string\n    json.linkedInUrls = (json.linkedInUrls || []).join('; ');\n\n    // Create FullName\n    const fullName = `${json.firstnameFrom || ''} ${json.lastnameFrom || ''}`.trim();\n    json.FullName = fullName;\n\n    return { json };\n  })\n  .filter(item => {\n    const fullName = item.json.FullName;\n    return fullName && fullName !== 'Ali Hassan'; // Keep only if not empty and not \"Ali Hassan\"\n  });\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        -20
+      ],
+      "id": "2db16286-9ff9-4192-97a4-80da61da89be",
+      "name": "Clean Data And Add Full Name"
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "1q81cLwkTp6VzBYyHq5pZ2MW1NsTSBAlLxHiQFe4aIl8",
+          "mode": "list",
+          "cachedResultName": "Scrap Data Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1q81cLwkTp6VzBYyHq5pZ2MW1NsTSBAlLxHiQFe4aIl8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1q81cLwkTp6VzBYyHq5pZ2MW1NsTSBAlLxHiQFe4aIl8/edit#gid=0"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2356,
+        -20
+      ],
+      "id": "c234f29f-aa97-4b4b-8ce7-37c457e9a6f5",
+      "name": "Clean Previous Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2oyigEutky9z8jk1",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1q81cLwkTp6VzBYyHq5pZ2MW1NsTSBAlLxHiQFe4aIl8",
+          "mode": "list",
+          "cachedResultName": "Scrap Data Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1q81cLwkTp6VzBYyHq5pZ2MW1NsTSBAlLxHiQFe4aIl8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1q81cLwkTp6VzBYyHq5pZ2MW1NsTSBAlLxHiQFe4aIl8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "threadUrl": "={{ $('Clean Data And Add Full Name').item.json.threadUrl }}",
+            "linkedInUrls": "={{ $('Clean Data And Add Full Name').item.json.linkedInUrls }}",
+            "message": "={{ $('Clean Data And Add Full Name').item.json.message }}",
+            "lastMessageFromUrl": "={{ $('Clean Data And Add Full Name').item.json.lastMessageFromUrl }}",
+            "firstnameFrom": "={{ $('Clean Data And Add Full Name').item.json.firstnameFrom }}",
+            "lastnameFrom": "={{ $('Clean Data And Add Full Name').item.json.lastnameFrom }}",
+            "occupationFrom": "={{ $('Clean Data And Add Full Name').item.json.occupationFrom }}",
+            "isLastMessageFromMe": "={{ $('Clean Data And Add Full Name').item.json.isLastMessageFromMe }}",
+            "readStatus": "={{ $('Clean Data And Add Full Name').item.json.readStatus }}",
+            "lastMessageDate": "={{ $('Clean Data And Add Full Name').item.json.lastMessageDate }}",
+            "timestamp": "={{ $('Clean Data And Add Full Name').item.json.timestamp }}",
+            "FullName": "={{ $('Clean Data And Add Full Name').item.json.FullName }}",
+            "Response": "={{ $('Basic LLM Chain').item.json.text }}"
+          },
+          "matchingColumns": [
+            "threadUrl"
+          ],
+          "schema": [
+            {
+              "id": "threadUrl",
+              "displayName": "threadUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linkedInUrls",
+              "displayName": "linkedInUrls",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lastMessageFromUrl",
+              "displayName": "lastMessageFromUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "firstnameFrom",
+              "displayName": "firstnameFrom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lastnameFrom",
+              "displayName": "lastnameFrom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "occupationFrom",
+              "displayName": "occupationFrom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "isLastMessageFromMe",
+              "displayName": "isLastMessageFromMe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "readStatus",
+              "displayName": "readStatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lastMessageDate",
+              "displayName": "lastMessageDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FullName",
+              "displayName": "FullName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Response",
+              "displayName": "Response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2576,
+        -20
+      ],
+      "id": "45c9a341-5dda-4516-ab8f-4fd92ef674b8",
+      "name": "Add Data In Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2oyigEutky9z8jk1",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.phantombuster.com/api/v2/agents/unschedule-all",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Phantombuster-Key",
+              "value": "rTUorTzk9IsnmCIc1tNUpsXYUUOBaC2M63t0OtR7uzI"
+            },
+            {
+              "name": "X-Phantombuster-Org",
+              "value": "2141574223274199"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3016,
+        -20
+      ],
+      "id": "304de753-c865-4c4b-8931-491f387e172b",
+      "name": "Phantumbuster Message Send"
+    },
+    {
+      "parameters": {
+        "jsCode": "// JavaScript code in \"Value Expression\" mode\nconst now = new Date();\nconst mm = String(now.getMonth() + 1).padStart(2, '0');\nconst dd = String(now.getDate()).padStart(2, '0');\nconst yyyy = now.getFullYear();\nconst today = `${mm}-${dd}-${yyyy}`;\nreturn [{ json: { today } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        -20
+      ],
+      "id": "34f4b0d8-641e-42a1-a65d-ba834b2d1a4b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -20
+      ],
+      "id": "e06f786f-486f-4418-938a-0859ea89a846",
+      "name": "Wait",
+      "webhookId": "fc66d4fc-ccf5-4aa4-9bb3-b977828916bf"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst oneDayInMs = 24 * 60 * 60 * 1000;\n\nreturn items.filter(item => {\n  const msgDate = new Date(item.json.lastMessageDate);\n  const diff = now - msgDate;\n  return diff <= oneDayInMs;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        -20
+      ],
+      "id": "a0a18f90-4c20-47f7-99d3-b2810f150391",
+      "name": "Remove According Time"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Phantom Buster Fetch Message": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Phantom Download Output": {
+      "main": [
+        [
+          {
+            "node": "Clean URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Clean Data And Add Full Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Clean Previous Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Phantumbuster Message Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean URL": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Data And Add Full Name": {
+      "main": [
+        [
+          {
+            "node": "Remove According Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Previous Data": {
+      "main": [
+        [
+          {
+            "node": "Add Data In Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Data In Sheet": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Phantom Buster Fetch Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Phantom Download Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove According Time": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7abd7149-0904-43a8-bb1e-6da3486431a0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aadbce3e58ca79942098a1ab06d47e3b0b767ef50bf4733f2c3c9a543e097779"
+  },
+  "id": "Pz3jmz3iUhcRH6YA",
+  "tags": []
+}
