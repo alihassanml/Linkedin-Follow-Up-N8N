@@ -1,6 +1,7 @@
 # 🔁 LinkedIn Follow-Up Automation with N8N
 
 Automate LinkedIn follow-up messages using **n8n**, **PhantomBuster**, and **Google Sheets** – no manual work required!
+
 N8n Flow
 
 ![Image](./image.png)
